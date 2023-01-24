@@ -14,7 +14,7 @@ pip install cjm_diffusers_utils
 ### pil_to_latent
 
 ``` python
-from cjm_py_utils.diffusers_utils import pil_to_latent
+from cjm_diffusers_utils.core import pil_to_latent
 from PIL import Image  # For working with images
 from torchvision import transforms  # PyTorch module for image transformations
 # Import diffusers AutoencoderKL
@@ -41,7 +41,7 @@ print(f"Latent Dimensions: {img_latents.shape}")
 ### latent_to_pil
 
 ``` python
-from cjm_py_utils.diffusers_utils import latent_to_pil
+from cjm_diffusers_utils.core import latent_to_pil
 ```
 
 ``` python
@@ -54,7 +54,7 @@ print(f"Decoded Image Size: {decoded_img.size}")
 ### text_to_emb
 
 ``` python
-from cjm_py_utils.diffusers_utils import text_to_emb
+from cjm_diffusers_utils.core import text_to_emb
 # Import the `CLIPTextModel`, `CLIPTokenizer`
 from transformers import CLIPTextModel, CLIPTokenizer
 ```
@@ -77,7 +77,7 @@ text_emb.shape
 ### prepare_noise_scheduler
 
 ``` python
-from cjm_py_utils.diffusers_utils import prepare_noise_scheduler
+from cjm_diffusers_utils.core import prepare_noise_scheduler
 from diffusers import DDIMScheduler
 ```
 
@@ -99,7 +99,7 @@ print(noise_scheduler.timesteps[:10])
 ### prepare_depth_mask
 
 ``` python
-from cjm_py_utils.diffusers_utils import prepare_depth_mask
+from cjm_diffusers_utils.core import prepare_depth_mask
 ```
 
 ``` python
