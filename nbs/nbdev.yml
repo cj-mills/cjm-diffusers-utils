@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "cjm-diffusers-utils"
+  site-url: "https://cj-mills.github.io/cjm-diffusers-utils"
+  description: "Some utility functions I frequently use with 🤗 diffusers."
+  repo-branch: main
+  repo-url: "https://github.com/cj-mills/cjm-diffusers-utils"
