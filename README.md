@@ -14,12 +14,12 @@ pip install cjm_diffusers_utils
 ``` python
 import torch
 from cjm_pytorch_utils.core import get_torch_device
-dtype = torch.float16
 device = get_torch_device()
-device
+dtype = torch.float16 if device == 'cuda' else torch.float16
+device, dtype
 ```
 
-    'cuda'
+    ('cuda', torch.float16)
 
 ### pil_to_latent
 
