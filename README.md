@@ -11,19 +11,27 @@ pip install cjm_diffusers_utils
 
 ## How to use
 
+``` python
+import torch
+from cjm_pytorch_utils.core import get_torch_device
+dtype = torch.float16
+device = get_torch_device()
+device
+```
+
+    'cuda'
+
 ### pil_to_latent
 
 ``` python
 from cjm_diffusers_utils.core import pil_to_latent
-from PIL import Image  # For working with images
-from torchvision import transforms  # PyTorch module for image transformations
-# Import diffusers AutoencoderKL
+from PIL import Image
 from diffusers import AutoencoderKL
 ```
 
 ``` python
 model_name = "stabilityai/stable-diffusion-2-1"
-vae = AutoencoderKL.from_pretrained(model_name, subfolder="vae")
+vae = AutoencoderKL.from_pretrained(model_name, subfolder="vae").to(device=device, dtype=dtype)
 ```
 
 ``` python
@@ -55,7 +63,6 @@ print(f"Decoded Image Size: {decoded_img.size}")
 
 ``` python
 from cjm_diffusers_utils.core import text_to_emb
-# Import the `CLIPTextModel`, `CLIPTokenizer`
 from transformers import CLIPTextModel, CLIPTokenizer
 ```
 
@@ -63,7 +70,7 @@ from transformers import CLIPTextModel, CLIPTokenizer
 # Load the tokenizer for the specified model
 tokenizer = CLIPTokenizer.from_pretrained(model_name, subfolder="tokenizer")
 # Load the text encoder for the specified model
-text_encoder = CLIPTextModel.from_pretrained(model_name, subfolder="text_encoder")
+text_encoder = CLIPTextModel.from_pretrained(model_name, subfolder="text_encoder").to(device=device, dtype=dtype)
 ```
 
 ``` python
@@ -78,11 +85,11 @@ text_emb.shape
 
 ``` python
 from cjm_diffusers_utils.core import prepare_noise_scheduler
-from diffusers import DDIMScheduler
+from diffusers import DEISMultistepScheduler
 ```
 
 ``` python
-noise_scheduler = DDIMScheduler.from_pretrained(model_name, subfolder='scheduler')
+noise_scheduler = DEISMultistepScheduler.from_pretrained(model_name, subfolder='scheduler')
 print(f"Number of timesteps: {len(noise_scheduler.timesteps)}")
 print(noise_scheduler.timesteps[:10])
 
@@ -92,9 +99,9 @@ print(noise_scheduler.timesteps[:10])
 ```
 
     Number of timesteps: 1000
-    tensor([999, 998, 997, 996, 995, 994, 993, 992, 991, 990])
+    tensor([999., 998., 997., 996., 995., 994., 993., 992., 991., 990.])
     Number of timesteps: 70
-    tensor([967, 953, 939, 925, 911, 897, 883, 869, 855, 841])
+    tensor([999, 985, 970, 956, 942, 928, 913, 899, 885, 871])
 
 ### prepare_depth_mask
 
@@ -107,10 +114,12 @@ depth_map_path = '../images/depth-cat.png'
 depth_map = Image.open(depth_map_path)
 print(f"Depth map size: {depth_map.size}")
 
-depth_mask = prepare_depth_mask(depth_map)
+depth_mask = prepare_depth_mask(depth_map).to(device=device, dtype=dtype)
 depth_mask.shape, depth_mask.min(), depth_mask.max()
 ```
 
     Depth map size: (768, 512)
 
-    (torch.Size([1, 1, 64, 96]), tensor(-1.), tensor(1.))
+    (torch.Size([1, 1, 64, 96]),
+     tensor(-1., device='cuda:0', dtype=torch.float16),
+     tensor(1., device='cuda:0', dtype=torch.float16))
