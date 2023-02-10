@@ -15,7 +15,7 @@ pip install cjm_diffusers_utils
 import torch
 from cjm_pytorch_utils.core import get_torch_device
 device = get_torch_device()
-dtype = torch.float16 if device == 'cuda' else torch.float16
+dtype = torch.float16 if device == 'cuda' else torch.float32
 device, dtype
 ```
 
