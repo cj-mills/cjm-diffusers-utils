@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Some utility functions for working with 🤗 diffusers">
+
+<title>cjm-diffusers-utils - core</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="cjm-diffusers-utils - core">
+<meta property="og:description" content="Some utility functions for working with 🤗 diffusers">
+<meta property="og:site-name" content="cjm-diffusers-utils">
+<meta name="twitter:title" content="cjm-diffusers-utils - core">
+<meta name="twitter:description" content="Some utility functions for working with 🤗 diffusers">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">cjm-diffusers-utils</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">core</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">cjm-diffusers-utils</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.html" class="sidebar-item-text sidebar-link active">core</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#pil_to_latent" id="toc-pil_to_latent" class="nav-link active" data-scroll-target="#pil_to_latent">pil_to_latent</a></li>
+  <li><a href="#latent_to_pil" id="toc-latent_to_pil" class="nav-link" data-scroll-target="#latent_to_pil">latent_to_pil</a></li>
+  <li><a href="#text_to_emb" id="toc-text_to_emb" class="nav-link" data-scroll-target="#text_to_emb">text_to_emb</a></li>
+  <li><a href="#prepare_noise_scheduler" id="toc-prepare_noise_scheduler" class="nav-link" data-scroll-target="#prepare_noise_scheduler">prepare_noise_scheduler</a></li>
+  <li><a href="#prepare_depth_mask" id="toc-prepare_depth_mask" class="nav-link" data-scroll-target="#prepare_depth_mask">prepare_depth_mask</a></li>
+  <li><a href="#denoise_depth2img" id="toc-denoise_depth2img" class="nav-link" data-scroll-target="#denoise_depth2img">denoise_depth2img</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/cj-mills/cjm-diffusers-utils/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">core</h1>
+</div>
+
+<div>
+  <div class="description">
+    Some utility functions for working with 🤗 diffusers
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_pytorch_utils.core <span class="im">import</span> get_torch_device</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> get_torch_device()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dtype <span class="op">=</span> torch.float16 <span class="cf">if</span> device <span class="op">==</span> <span class="st">'cuda'</span> <span class="cf">else</span> torch.float32</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>device, dtype</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>('cpu', torch.float32)</code></pre>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cj-mills/cjm-diffusers-utils/blob/main/cjm_diffusers_utils/diffusers_utils.py#L25" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="pil_to_latent" class="level3">
+<h3 class="anchored" data-anchor-id="pil_to_latent">pil_to_latent</h3>
+<blockquote class="blockquote">
+<pre><code> pil_to_latent (image:&lt;module'PIL.Image'from'/opt/hostedtoolcache/Python/3
+                .9.16/x64/lib/python3.9/site-packages/PIL/Image.py'&gt;,
+                vae:diffusers.models.autoencoder_kl.AutoencoderKL)</code></pre>
+</blockquote>
+<p>This function converts an image to latents using a VAE model.</p>
+<p>Returns: latents (torch.Tensor): The latents generated from the image.</p>
+<table class="table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>image</td>
+<td>Image</td>
+<td>The image to be converted to latents.</td>
+</tr>
+<tr class="even">
+<td>vae</td>
+<td>AutoencoderKL</td>
+<td>The VAE model used to convert the image to latents.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Select a model</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>model_name <span class="op">=</span> <span class="st">"stabilityai/stable-diffusion-2-1"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Load autoencoder</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>vae <span class="op">=</span> AutoencoderKL.from_pretrained(model_name, subfolder<span class="op">=</span><span class="st">"vae"</span>).to(device<span class="op">=</span>device, dtype<span class="op">=</span>dtype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Open sample image</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>img_path <span class="op">=</span> <span class="st">'../images/cat.jpg'</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>src_img <span class="op">=</span> Image.<span class="bu">open</span>(img_path).convert(<span class="st">'RGB'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>src_img</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="00_core_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p><strong>Encode image</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>img_latents <span class="op">=</span> pil_to_latent(src_img, vae)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>img_latents.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>torch.Size([1, 4, 64, 96])</code></pre>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cj-mills/cjm-diffusers-utils/blob/main/cjm_diffusers_utils/diffusers_utils.py#L52" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="latent_to_pil" class="level3">
+<h3 class="anchored" data-anchor-id="latent_to_pil">latent_to_pil</h3>
+<blockquote class="blockquote">
+<pre><code> latent_to_pil (latents:torch.Tensor,
+                vae:diffusers.models.autoencoder_kl.AutoencoderKL)</code></pre>
+</blockquote>
+<p>This function converts latents to an image using a VAE model.</p>
+<p>Returns: image (PIL.Image): The image generated from the latents.</p>
+<table class="table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>latents</td>
+<td>torch.Tensor</td>
+<td>The latents to be converted to an image.</td>
+</tr>
+<tr class="even">
+<td>vae</td>
+<td>AutoencoderKL</td>
+<td>The VAE model used to convert the latents to an image.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decode latents</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>decoded_img <span class="op">=</span> latent_to_pil(img_latents, vae)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>decoded_img</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="00_core_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cj-mills/cjm-diffusers-utils/blob/main/cjm_diffusers_utils/diffusers_utils.py#L77" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="text_to_emb" class="level3">
+<h3 class="anchored" data-anchor-id="text_to_emb">text_to_emb</h3>
+<blockquote class="blockquote">
+<pre><code> text_to_emb (prompt:str,
+              tokenizer:transformers.models.clip.tokenization_clip.CLIPTok
+              enizer, text_encoder:transformers.models.clip.modeling_clip.
+              CLIPTextModel, negative_prompt:str='', maxlen:int=None)</code></pre>
+</blockquote>
+<p>Encodes the provided text prompts using the specified text encoder.</p>
+<p>Returns: torch.Tensor: The encoded text.</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>prompt</td>
+<td>str</td>
+<td></td>
+<td>The text prompt to be encoded.</td>
+</tr>
+<tr class="even">
+<td>tokenizer</td>
+<td>CLIPTokenizer</td>
+<td></td>
+<td>The tokenizer to be used.</td>
+</tr>
+<tr class="odd">
+<td>text_encoder</td>
+<td>CLIPTextModel</td>
+<td></td>
+<td>The text encoder to be used.</td>
+</tr>
+<tr class="even">
+<td>negative_prompt</td>
+<td>str</td>
+<td></td>
+<td>The negative text prompt to be encoded.</td>
+</tr>
+<tr class="odd">
+<td>maxlen</td>
+<td>int</td>
+<td>None</td>
+<td>The maximum length of the encoded text. Default is None.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Load tokenizer</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the tokenizer for the specified model</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> CLIPTokenizer.from_pretrained(model_name, subfolder<span class="op">=</span><span class="st">"tokenizer"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Load text encoder</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the text encoder for the specified model</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>text_encoder <span class="op">=</span> CLIPTextModel.from_pretrained(model_name, subfolder<span class="op">=</span><span class="st">"text_encoder"</span>).to(device<span class="op">=</span>device, dtype<span class="op">=</span>dtype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Define sample prompt</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"A cat sitting on the floor."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Encode sample prompt</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>text_emb <span class="op">=</span> text_to_emb(prompt, tokenizer, text_encoder)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>text_emb.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>torch.Size([2, 77, 1024])</code></pre>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cj-mills/cjm-diffusers-utils/blob/main/cjm_diffusers_utils/diffusers_utils.py#L108" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="prepare_noise_scheduler" class="level3">
+<h3 class="anchored" data-anchor-id="prepare_noise_scheduler">prepare_noise_scheduler</h3>
+<blockquote class="blockquote">
+<pre><code> prepare_noise_scheduler (noise_scheduler, max_steps:int=50,
+                          noise_strength:float=1.0)</code></pre>
+</blockquote>
+<p>Prepare the noise scheduler by setting the timesteps and adjusting the noise strength.</p>
+<p>Returns: noise_scheduler (object): The modified noise scheduler object</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>noise_scheduler</td>
+<td></td>
+<td></td>
+<td>The noise scheduler object to be modified</td>
+</tr>
+<tr class="even">
+<td>max_steps</td>
+<td>int</td>
+<td>50</td>
+<td>The maximum number of steps</td>
+</tr>
+<tr class="odd">
+<td>noise_strength</td>
+<td>float</td>
+<td>1.0</td>
+<td>The strength of the noise</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Load noise scheduler</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>noise_scheduler <span class="op">=</span> DEISMultistepScheduler.from_pretrained(model_name, subfolder<span class="op">=</span><span class="st">'scheduler'</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of timesteps: </span><span class="sc">{</span><span class="bu">len</span>(noise_scheduler.timesteps)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>noise_scheduler.timesteps[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of timesteps: 1000</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>tensor([999., 998., 997., 996., 995., 994., 993., 992., 991., 990.])</code></pre>
+</div>
+</div>
+<p><strong>Update noise scheduler</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>noise_scheduler <span class="op">=</span> prepare_noise_scheduler(noise_scheduler, <span class="dv">25</span>, <span class="fl">1.0</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of timesteps: </span><span class="sc">{</span><span class="bu">len</span>(noise_scheduler.timesteps)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>noise_scheduler.timesteps[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of timesteps: 25</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>tensor([999, 959, 919, 879, 839, 799, 759, 719, 679, 639])</code></pre>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cj-mills/cjm-diffusers-utils/blob/main/cjm_diffusers_utils/diffusers_utils.py#L134" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="prepare_depth_mask" class="level3">
+<h3 class="anchored" data-anchor-id="prepare_depth_mask">prepare_depth_mask</h3>
+<blockquote class="blockquote">
+<pre><code> prepare_depth_mask (depth_map, divisor=8)</code></pre>
+</blockquote>
+<p>Prepare the depth mask by resizing and normalizing the depth map.</p>
+<p>Returns: depth_mask (torch.Tensor): The normalized and resized depth mask</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>depth_map</td>
+<td></td>
+<td></td>
+<td>The depth map image</td>
+</tr>
+<tr class="even">
+<td>divisor</td>
+<td>int</td>
+<td>8</td>
+<td>The divisor value used to resize the depth map</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Load depth map</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>depth_map_path <span class="op">=</span> <span class="st">'../images/depth-cat.png'</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>depth_map <span class="op">=</span> Image.<span class="bu">open</span>(depth_map_path)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>depth_map</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="00_core_files/figure-html/cell-24-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p><strong>Prepare depth mask</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>depth_mask <span class="op">=</span> prepare_depth_mask(depth_map).to(device<span class="op">=</span>device, dtype<span class="op">=</span>dtype)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>depth_mask.shape, depth_mask.<span class="bu">min</span>(), depth_mask.<span class="bu">max</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(torch.Size([1, 1, 64, 96]),
+ tensor(-1., device='cuda:0', dtype=torch.float16),
+ tensor(1., device='cuda:0', dtype=torch.float16))</code></pre>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/cj-mills/cjm-diffusers-utils/blob/main/cjm_diffusers_utils/core.py#L159" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="denoise_depth2img" class="level3">
+<h3 class="anchored" data-anchor-id="denoise_depth2img">denoise_depth2img</h3>
+<blockquote class="blockquote">
+<pre><code> denoise_depth2img (latents:torch.Tensor, depth_mask:torch.Tensor,
+                    text_emb:torch.Tensor, unet:diffusers.models.unet_2d_c
+                    ondition.UNet2DConditionModel, noise_scheduler,
+                    guidance_scale:float=8.0)</code></pre>
+</blockquote>
+<p>Generate an image from a given initial image, depth map and prompt.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>latents</td>
+<td>Tensor</td>
+<td></td>
+<td>The initial image latents</td>
+</tr>
+<tr class="even">
+<td>depth_mask</td>
+<td>Tensor</td>
+<td></td>
+<td>The image depth mask</td>
+</tr>
+<tr class="odd">
+<td>text_emb</td>
+<td>Tensor</td>
+<td></td>
+<td>The embedded text prompt and negative prompt</td>
+</tr>
+<tr class="even">
+<td>unet</td>
+<td>UNet2DConditionModel</td>
+<td></td>
+<td>The Unet denoiser</td>
+</tr>
+<tr class="odd">
+<td>noise_scheduler</td>
+<td></td>
+<td></td>
+<td>The noise scheduler</td>
+</tr>
+<tr class="even">
+<td>guidance_scale</td>
+<td>float</td>
+<td>8.0</td>
+<td>The guidance scale</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>model_name <span class="op">=</span> <span class="st">"stabilityai/stable-diffusion-2-depth"</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>unet <span class="op">=</span> UNet2DConditionModel.from_pretrained(model_name, subfolder<span class="op">=</span><span class="st">"unet"</span>).to(device<span class="op">=</span>device, dtype<span class="op">=</span>dtype)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>vae <span class="op">=</span> AutoencoderKL.from_pretrained(model_name, subfolder<span class="op">=</span><span class="st">"vae"</span>).to(device<span class="op">=</span>device, dtype<span class="op">=</span>dtype)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> CLIPTokenizer.from_pretrained(model_name, subfolder<span class="op">=</span><span class="st">"tokenizer"</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>text_encoder <span class="op">=</span> CLIPTextModel.from_pretrained(model_name, subfolder<span class="op">=</span><span class="st">"text_encoder"</span>).to(device<span class="op">=</span>device, dtype<span class="op">=</span>dtype)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>noise_scheduler <span class="op">=</span> DEISMultistepScheduler.from_pretrained(model_name, subfolder<span class="op">=</span><span class="st">'scheduler'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>noise_scheduler <span class="op">=</span> prepare_noise_scheduler(noise_scheduler, <span class="dv">25</span>, <span class="fl">0.9</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>img_latents <span class="op">=</span> pil_to_latent(src_img, vae).to(device<span class="op">=</span>device, dtype<span class="op">=</span>dtype)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"A Monet oil painting of a cat"</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>negative_prompt <span class="op">=</span> <span class="st">"bad, deformed, ugly, bad anotomy"</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>text_emb <span class="op">=</span> text_to_emb(prompt<span class="op">=</span>prompt, </span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                       tokenizer<span class="op">=</span>tokenizer, </span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>                       text_encoder<span class="op">=</span>text_encoder, </span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>                       negative_prompt<span class="op">=</span>negative_prompt)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate latent noise</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>noise <span class="op">=</span> torch.randn(img_latents.shape, device<span class="op">=</span>unet.device, dtype<span class="op">=</span>unet.dtype)</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Add noise to the image latents at the first timestep</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>latents <span class="op">=</span> noise_scheduler.add_noise(img_latents, </span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>                                    noise, </span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>                                    noise_scheduler.timesteps[[<span class="dv">0</span>]]).to(unet.device)</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>denoised_latents <span class="op">=</span> denoise_depth2img(latents<span class="op">=</span>latents,</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>                                     depth_mask<span class="op">=</span>depth_mask,</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>                                     text_emb<span class="op">=</span>text_emb,</span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>                                     unet<span class="op">=</span>unet,</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>                                     noise_scheduler<span class="op">=</span>noise_scheduler,</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>                                     guidance_scale<span class="op">=</span><span class="fl">8.0</span>)</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>latent_to_pil(denoised_latents, vae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"ca39683f0bc040ddbc3383b6fb4db9ea","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="00_core_files/figure-html/cell-28-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
